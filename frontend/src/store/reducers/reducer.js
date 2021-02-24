@@ -7,18 +7,50 @@ const initialState = {
       _id: "",
     },
   ],
-  error: "",
-  loading: false,
+  fetchTodoIsLoading: false,
+  fetchTodoError: "",
+  toggleCompletedIsLoading: "",
+  toggleCompletedError: false,
 };
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case "FETCH_TODO_START":
-      return { ...state, loading: true };
+      return { ...state, fetchTodoIsLoading: true, fetchTodoError: "" };
     case "FETCH_TODO_SUCCESS":
-      return { ...state, todoList: action.payload, error: "", loading: false };
+      return {
+        ...state,
+        todoList: action.payload,
+        fetchTodoIsLoading: false,
+        fetchTodoError: "",
+      };
     case "FETCH_TODO_FAIL":
-      return { ...state, error: action.payload, loading: false };
+      return {
+        ...state,
+        fetchTodoIsLoading: false,
+        fetchTodoError: action.payload,
+      };
+    case "TOGGLE_COMPLETED_START":
+      return {
+        ...state,
+        toggleCompletedIsLoading: true,
+        toggleCompletedError: "",
+      };
+    case "TOGGLE_COMLETED_SUCCESS":
+      return {
+        ...state,
+        todoList: state.todoList.map((item) =>
+          item._id === action.payload._id ? action.payload : item
+        ),
+        toggleCompletedIsLoading: false,
+        toggleCompletedError: "",
+      };
+    case "TOGGLE_COMPLETED_FAIL":
+      return {
+        ...state,
+        toggleCompletedIsLoading: false,
+        toggleCompletedError: action.payload,
+      };
     default:
       return state;
   }

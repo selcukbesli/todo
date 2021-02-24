@@ -1,6 +1,6 @@
 import "./App.css";
-import MainNavbar from "./components/MainNavbar/MainNavbar";
-import TodoList from "./components/TodoList/TodoList";
+import MainNavbar from "./components/Navigation/MainNavbar/MainNavbar";
+import TodoList from "./components/Todo/TodoList/TodoList";
 
 const App = () => {
   return (
