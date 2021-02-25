@@ -1,10 +1,17 @@
 import React from "react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchTodoList, toggleCompleted } from "../../../store/actions";
+import {
+  fetchTodoList,
+  removeTodo,
+  toggleCompleted,
+} from "../../../store/actions";
 import ListGroup from "react-bootstrap/ListGroup";
 import Spinner from "react-bootstrap/Spinner";
 import CustomSpinner from "../../UI/CustomSpinner/CustomSpinner";
+import InputArea from "../InputArea/InputArea";
+import UpdateTodoModal from "../UpdateTodoModal/UpdateTodoModal";
+import { DeleteIcon } from "../../UI/Icons";
 
 const TodoList = () => {
   const todoList = useSelector((state) => state.todoList);
@@ -12,6 +19,7 @@ const TodoList = () => {
   const toggleCompletedIsLoading = useSelector(
     (state) => state.toggleCompletedIsLoading
   );
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -23,7 +31,8 @@ const TodoList = () => {
   };
 
   return (
-    <div class="w-75 mx-auto">
+    <div className="w-75 mx-auto">
+      <InputArea />
       {fetchTodoIsLoading ? (
         <CustomSpinner />
       ) : (
@@ -33,20 +42,31 @@ const TodoList = () => {
               style={item.completed ? listItemStyle : null}
               as="li"
               key={item._id}
-              onClick={() =>
-                dispatch(toggleCompleted(item._id, item.completed))
-              }
             >
-              <div class="container">
-                <div class="row">
-                  <div class="col-sm">{item.name}</div>
-                  {toggleCompletedIsLoading ? (
-                    <div class="col-1">
+              <div className="container">
+                <div className="row">
+                  <div
+                    className="col-sm"
+                    onClick={() =>
+                      dispatch(toggleCompleted(item._id, item.completed))
+                    }
+                  >
+                    {item.name}
+                    {toggleCompletedIsLoading ? (
                       <Spinner animation="border" variant="dark" size="sm" />
-                    </div>
-                  ) : (
-                    ""
-                  )}
+                    ) : (
+                      ""
+                    )}
+                  </div>
+                  <div className="col-2">
+                    <UpdateTodoModal item={item} />
+                    <button
+                      onClick={() => dispatch(removeTodo(item._id))}
+                      style={{ background: "none", border: "none" }}
+                    >
+                      <DeleteIcon />
+                    </button>
+                  </div>
                 </div>
               </div>
             </ListGroup.Item>

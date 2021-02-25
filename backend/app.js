@@ -4,8 +4,9 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 
 const app = express();
-const todoRoutes = require("./routes/todos");
 const PORT = 3001;
+const todoRoutes = require("./routes/todos");
+const deleteCompletedRoutes = require("./routes/deleteCompleted");
 
 require("dotenv").config();
 
@@ -13,6 +14,7 @@ require("dotenv").config();
 app.use(cors());
 app.use(bodyParser.json());
 app.use("/todos", todoRoutes);
+app.use("/deleteCompleted", deleteCompletedRoutes);
 
 //Home Route
 app.get("/", (req, res) => {

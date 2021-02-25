@@ -7,8 +7,8 @@ router.post("/", (req, res) => {
   // console.log(req.body);
   const todo = new Todo({
     name: req.body.name,
-    completed: req.body.name,
-    created: req.body.name,
+    completed: req.body.completed,
+    created: req.body.created,
   });
 
   todo
@@ -33,7 +33,6 @@ router.get("/:todoId", (req, res) => {
 
 // UPDATE
 router.put("/:todoId", (req, res) => {
-  console.log(req.body);
   Todo.findByIdAndUpdate(req.params.todoId, req.body, { new: true })
     .then((data) => res.json(data))
     .catch((err) => res.json({ msg: err }));
