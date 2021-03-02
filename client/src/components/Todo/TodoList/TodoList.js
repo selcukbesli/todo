@@ -14,10 +14,12 @@ import UpdateTodoModal from "../UpdateTodoModal/UpdateTodoModal";
 import { DeleteIcon } from "../../UI/Icons";
 
 const TodoList = () => {
-  const todoList = useSelector((state) => state.todoList);
-  const fetchTodoIsLoading = useSelector((state) => state.fetchTodoIsLoading);
+  const todoList = useSelector((state) => state.todo.todoList);
+  const fetchTodoIsLoading = useSelector(
+    (state) => state.todo.fetchTodoIsLoading
+  );
   const toggleCompletedIsLoading = useSelector(
-    (state) => state.toggleCompletedIsLoading
+    (state) => state.todo.toggleCompletedIsLoading
   );
 
   const dispatch = useDispatch();
