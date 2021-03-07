@@ -1,4 +1,5 @@
 import Axios from "../../Axios";
+import { tokenConfig } from "./auth";
 
 // FETCH DATA FROM SERVER
 export const fetchTodoListStart = () => {
@@ -42,9 +43,9 @@ export const postTodoStart = () => {
   };
 };
 
-export const postTodo = (text) => (dispatch) => {
+export const postTodo = (text) => (dispatch, getState) => {
   dispatch(postTodoStart());
-  Axios.post("/todos", { name: text })
+  Axios.post("/todos", { name: text }, tokenConfig(getState))
     .then((response) => {
       dispatch({ type: "POST_TODO_SUCCESS", payload: response.data });
     })

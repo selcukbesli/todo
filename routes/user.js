@@ -3,27 +3,54 @@ const router = express.Router();
 const { OAuth2Client } = require("google-auth-library");
 require("dotenv").config();
 const User = require("../models/User");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
-const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+// SIGN UP A USER
+router.post("/", (req, res) => {
+  // console.log(req);
+  const { name, email, password } = req.body;
 
-// COPY GOOGLE ACCOUNT DETAILS OR UPDATE
-router.post("/", async (req, res) => {
-  //   console.log(req);
-  const { token } = req.body;
-  const ticket = await client.verifyIdToken({
-    idToken: token,
-    audience: process.env.GOOGLE_CLIENT_ID,
+  // simple validation
+  if (!name || !email || !password) {
+    return res.status(400).json({ msg: "Please enter all fields" });
+  }
+  // Check for existing user
+  User.findOne({ email }).then((user) => {
+    if (user) return res.status(400).json({ msg: "User already exist" });
+
+    const newUser = new User({ name, email, password });
+
+    // HASH A PASSWORD AND STORE
+    bcrypt.genSalt(10, (err, salt) => {
+      bcrypt.hash(newUser.password, salt, (err, hash) => {
+        if (err) throw err;
+        newUser.password = hash;
+
+        newUser.save().then((user) => {
+          // CREATING A JWT
+          jwt.sign(
+            { id: user.id },
+            process.env.JWT_SECRET,
+            { expiresIn: "1h" },
+            (err, token) => {
+              if (err) throw err;
+              // SEND BACK A RES
+              res.json({
+                token,
+                user: {
+                  id: user.id,
+                  name: user.name,
+                  email: user.email,
+                },
+              });
+            }
+          );
+        });
+      });
+    });
   });
-  //   console.log("Comes from", ticket);
-  const { sub, email, name } = ticket.getPayload();
-
-  User.findOneAndUpdate(
-    { googleId: sub },
-    { email: email, name: name },
-    { new: true, upsert: true }
-  )
-    .then((data) => res.json(data))
-    .catch((err) => res.json({ msg: err }));
 });
 
 module.exports = router;

@@ -11,6 +11,10 @@ const UserSchema = new Schema(
       type: String,
       require: true,
     },
+    password: {
+      type: String,
+      required: true,
+    },
     googleId: {
       type: String,
       require: true,

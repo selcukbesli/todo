@@ -1,5 +1,5 @@
 const express = require("express");
-const bodyParser = require("body-parser");
+// const bodyParser = require("body-parser");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const path = require("path");
@@ -9,15 +9,18 @@ const PORT = process.env.PORT || 3001;
 const todoRoutes = require("./routes/todos");
 const deleteCompletedRoutes = require("./routes/deleteCompleted");
 const userRoutes = require("./routes/user");
+const authRoutes = require("./routes/auth");
 
 require("dotenv").config();
 
 // Middlewares
 app.use(cors());
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
+app.use(express.json());
 app.use("/api/todos", todoRoutes);
 app.use("/api/deleteCompleted", deleteCompletedRoutes);
 app.use("/api/user", userRoutes);
+app.use("/api/auth", authRoutes);
 
 //Home Route
 // app.get("/api", (req, res) => {

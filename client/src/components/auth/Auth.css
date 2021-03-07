@@ -1,0 +1,103 @@
+/* body {
+  background: #34495e;
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+} */
+
+.box {
+  margin: 20px auto;
+  width: 400px;
+  padding: 0px 0px 30px 0px;
+  /* position: absolute; */
+  /* top: 50%; */
+  /* left: 50%; */
+  /* transform: translate(-50%, -50%); */
+  background: #34495e;
+  text-align: center;
+  /* box-sizing: border-box; */
+}
+
+.box h1 {
+  color: white;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.box input[type="name"],
+.box input[type="email"],
+.box input[type="password"] {
+  border: 2px solid #3498db;
+  display: block;
+  text-align: center;
+  padding: 8px 10px;
+  margin: 20px auto;
+  width: 200px;
+  outline: none;
+  color: black;
+  border-radius: 6px;
+  transition: 0.25s;
+}
+
+.box input[type="name"]:focus,
+.box input[type="email"]:focus,
+.box input[type="password"]:focus {
+  width: 280px;
+  border-color: #2ecc71;
+  color: #2ecc71;
+}
+
+.box input[type="submit"] {
+  border: 2px solid white;
+  display: block;
+  text-align: center;
+  padding: 14px 40px;
+  margin: 20px auto;
+  outline: none;
+  color: white;
+  border-radius: 36px;
+  transition: 0.25s;
+  cursor: pointer;
+  background-color: #45aaf2;
+}
+
+.box input[type="submit"]:hover {
+  background: #3867d6;
+}
+
+.box button {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: none;
+  text-align: center;
+  padding: 5px 40px;
+  outline: none;
+  transition: 0.25s;
+  cursor: pointer;
+  background-color: #4b6584;
+  color: white;
+}
+
+.box .active {
+  background-color: #34495e;
+}
+
+.box h6 {
+  color: white;
+}
+
+.box button[type="button"] {
+  width: 40px;
+  height: 40px;
+}
+
+.box button[type="button"] div {
+  margin: 0 !important;
+  width: inherit;
+  height: inherit;
+}
+
+.box button span {
+  display: none;
+}

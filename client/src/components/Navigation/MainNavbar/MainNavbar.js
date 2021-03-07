@@ -1,19 +1,33 @@
 import React from "react";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
-import Login from "../../Login";
+import Logout from "../../auth/Logout";
+import { useSelector } from "react-redux";
+import { NavLink } from "react-router-dom";
+// import Login from "../../Login";
 
 const MainNavbar = () => {
+  const { isAuthenticated, user } = useSelector((state) => state.auth);
   return (
     <>
-      <Navbar bg="dark" variant="dark">
-        <Navbar.Brand href="#home">Todo List</Navbar.Brand>
-        <Nav className="mr-auto">
-          <Nav.Link href="#home">Home</Nav.Link>
-          <Nav.Link href="#features">Features</Nav.Link>
-          <Nav.Link href="#pricing">Pricing</Nav.Link>
-        </Nav>
-        <Login />
+      <Navbar className="navbar navbar-expand navbar-dark bg-dark">
+        <Navbar.Brand as={NavLink} to="/todos">
+          Todo List
+        </Navbar.Brand>
+        {isAuthenticated ? (
+          <Nav className="container justify-content-end ">
+            <Navbar.Text>Welcome {user?.name}</Navbar.Text>
+            <Nav.Link>
+              <Logout />
+            </Nav.Link>
+          </Nav>
+        ) : (
+          <Nav className="container  justify-content-end">
+            <Nav.Link as={NavLink} to="/" className="p-0 mb-0">
+              Sign In
+            </Nav.Link>
+          </Nav>
+        )}
       </Navbar>
     </>
   );
