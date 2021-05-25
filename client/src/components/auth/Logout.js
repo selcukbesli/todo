@@ -7,7 +7,9 @@ const Logout = () => {
 
   return (
     <>
-      <h5 onClick={() => dispatch(logout())}>Logout</h5>
+      <h5 onClick={() => dispatch(logout())} className="mb-0">
+        Logout
+      </h5>
     </>
   );
 };

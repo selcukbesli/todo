@@ -9,7 +9,6 @@ require("dotenv").config();
 
 // SIGN UP A USER
 router.post("/", (req, res) => {
-  // console.log(req);
   const { name, email, password } = req.body;
 
   // simple validation

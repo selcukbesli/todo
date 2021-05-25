@@ -11,11 +11,11 @@ const MainNavbar = () => {
   return (
     <>
       <Navbar className="navbar navbar-expand navbar-dark bg-dark">
-        <Navbar.Brand as={NavLink} to="/todos">
+        <Navbar.Brand as={NavLink} to="/todos" className="ms-2">
           Todo List
         </Navbar.Brand>
         {isAuthenticated ? (
-          <Nav className="container justify-content-end ">
+          <Nav className="container d-flex justify-content-end ">
             <Navbar.Text>Welcome {user?.name}</Navbar.Text>
             <Nav.Link>
               <Logout />

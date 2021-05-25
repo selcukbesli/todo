@@ -8,7 +8,7 @@ import { createStore, applyMiddleware, compose, combineReducers } from "redux";
 import { Provider } from "react-redux";
 import todoReducer from "./store/reducers/todo";
 import authReducer from "./store/reducers/auth";
-
+import { BrowserRouter as Router } from "react-router-dom";
 import thunk from "redux-thunk";
 
 const rootReducer = combineReducers({
@@ -25,7 +25,9 @@ const store = createStore(
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <App />
+      <Router>
+        <App />
+      </Router>
     </Provider>
   </React.StrictMode>,
   document.getElementById("root")

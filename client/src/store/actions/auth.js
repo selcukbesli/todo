@@ -38,10 +38,9 @@ export const loginGoogle = (token, history) => (dispatch) => {
   Axios.post("/auth/google", body, config)
     .then((res) => {
       dispatch({ type: "LOGIN_SUCCESS", payload: res.data });
-      history.push("/todos");
+      history.push(`/todos/${res.data.user.id}`);
     })
     .catch((err) => {
-      console.log(err);
       dispatch(
         returnErrors(err.response.data, err.response.status, "LOGIN_FAIL")
       );
@@ -68,14 +67,13 @@ export const clearErrors = () => {
 export const loadUser = () => (dispatch, getState) => {
   //User Loading
   dispatch({ type: "USER_LOADING" });
-  // console.log(tokenConfig(getState));
   Axios.get("/auth/user", tokenConfig(getState))
-    .then((res) =>
+    .then((res) => {
       dispatch({
         type: "USER_LOADED",
         payload: res.data,
-      })
-    )
+      });
+    })
     .catch((err) => {
       dispatch(returnErrors(err.response.data, err.response.status));
       dispatch({ type: "AUTH_ERROR" });
@@ -96,10 +94,9 @@ export const register = ({ name, email, password }, history) => (dispatch) => {
   Axios.post("/user", body, config)
     .then((res) => {
       dispatch({ type: "REGISTER_SUCCESS", payload: res.data });
-      history.push("/todos");
+      history.push(`/todos/${res.data.user.id}`);
     })
     .catch((err) => {
-      console.log(err);
       dispatch(
         returnErrors(err.response.data, err.response.status, "REGISTER_FAIL")
       );
@@ -121,10 +118,9 @@ export const login = ({ email, password, history }) => (dispatch) => {
   Axios.post("/auth", body, config)
     .then((res) => {
       dispatch({ type: "LOGIN_SUCCESS", payload: res.data });
-      history.push("/todos");
+      history.push(`/todos/${res.data.user.id}`);
     })
     .catch((err) => {
-      console.log(err);
       dispatch(
         returnErrors(err.response.data, err.response.status, "LOGIN_FAIL")
       );
@@ -139,7 +135,6 @@ export const logout = () => {
 
 // HELPER FUNCTION SETUP CONFIG HEADERS AND TOKEN
 export const tokenConfig = (getState) => {
-  // console.log(getState());
   //Get token from state
   const token = getState().auth.token;
 
@@ -154,6 +149,5 @@ export const tokenConfig = (getState) => {
   if (token) {
     config.headers["x-auth-token"] = token;
   }
-  // console.log(config);
   return config;
 };

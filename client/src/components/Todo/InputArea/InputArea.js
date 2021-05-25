@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import Button from "react-bootstrap/Button";
 import { useDispatch } from "react-redux";
-import { postTodo, removeTodos } from "../../../store/actions";
+import { postTodo } from "../../../store/actions";
+import { AddIcon } from "../../UI/Icons";
 
 const InputArea = () => {
   const [text, setText] = useState("");
@@ -12,34 +12,37 @@ const InputArea = () => {
     setText(event);
   };
 
+  const postTodoHandler = () => {
+    if (text.trim().length === 0) {
+      return;
+    }
+    dispatch(postTodo(text));
+  };
+
   return (
-    <div className="container">
-      <div className="row">
+    <div className="container px-0">
+      <form className="form-control-lg d-flex ps-0">
         <input
-          className="col-8"
+          className="col"
           placeholder="Enter to do "
           value={text}
           onChange={(event) => onChangeHandler(event.target.value)}
         />
-        <Button
-          variant="success"
-          type="submit"
-          className="col-2"
-          onClick={() => {
-            dispatch(postTodo(text));
-            setText("");
-          }}
-        >
-          Add
-        </Button>
-        <Button
-          variant="danger"
-          className="col-2"
-          onClick={() => dispatch(removeTodos())}
-        >
-          Delete
-        </Button>
-      </div>
+        <div className="col-2 d-flex justify-content-center">
+          <button
+            variant="success"
+            type="submit"
+            onClick={(event) => {
+              event.preventDefault();
+              postTodoHandler();
+              setText("");
+            }}
+            style={{ background: "none", border: "none" }}
+          >
+            <AddIcon disabled={text.trim().length === 0 ? true : false} />
+          </button>
+        </div>
+      </form>
     </div>
   );
 };

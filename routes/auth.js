@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { OAuth2Client } = require("google-auth-library");
+const { OAuth2Client, CodeChallengeMethod } = require("google-auth-library");
 require("dotenv").config();
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
@@ -51,8 +51,7 @@ router.post("/", (req, res) => {
 
 // Validate user with the token
 router.get("/user", auth, (req, res) => {
-  //   console.log(req.user.id);
-  User.findById(req.user.id)
+  User.findOne(req.user.id ? { _id: req.user.id } : { googleId: req.user.sub })
     .select("-password")
     .then((user) => res.json(user));
 });

@@ -5,20 +5,14 @@ const initialState = {
       completed: "",
       created: "",
       _id: "",
+      isLoading: false,
     },
   ],
   fetchTodoIsLoading: false,
   fetchTodoError: "",
-  toggleCompletedIsLoading: false,
-  toggleCompletedError: "",
+  errorMessage: "",
   postTodoIsLoading: false,
-  postTodoError: "",
   removeTodosIsLoading: false,
-  removeTodosError: "",
-  removeTodoIsLoading: false,
-  removeTodoError: "",
-  updateTodoIsLoading: false,
-  updateTodoError: "",
 };
 
 const reducer = (state = initialState, action) => {
@@ -41,67 +35,72 @@ const reducer = (state = initialState, action) => {
     case "TOGGLE_COMPLETED_START":
       return {
         ...state,
-        toggleCompletedIsLoading: true,
-        toggleCompletedError: "",
+        todoList: state.todoList.map((item) =>
+          item._id === action.payload ? { ...item, isLoading: true } : item
+        ),
+        errorMessage: "",
       };
     case "TOGGLE_COMPLETED_SUCCESS":
       return {
         ...state,
         todoList: state.todoList.map((item) =>
-          item._id === action.payload._id ? action.payload : item
+          item._id === action.payload._id
+            ? { ...action.payload, isLoading: false }
+            : item
         ),
-        toggleCompletedIsLoading: false,
-        toggleCompletedError: "",
+        errorMessage: "",
       };
     case "TOGGLE_COMPLETED_FAIL":
       return {
         ...state,
-        toggleCompletedIsLoading: false,
-        toggleCompletedError: action.payload,
+        todoList: state.todoList.map((item) => {
+          return { ...item, isLoading: false };
+        }),
+        errorMessage: action.payload,
       };
     case "POST_TODO_START":
       return {
         ...state,
         postTodoIsLoading: true,
-        postTodoError: "",
+        errorMessage: "",
       };
     case "POST_TODO_SUCCESS":
       return {
         ...state,
         todoList: [...state.todoList, action.payload],
         postTodoIsLoading: false,
-        postTodoError: "",
+        errorMessage: "",
       };
     case "POST_TODO_FAIL":
       return {
         ...state,
         postTodoIsLoading: false,
-        postTodoError: action.payload,
+        errorMessage: action.payload,
       };
     case "REMOVE_TODOS_START":
       return {
         ...state,
         removeTodosIsLoading: true,
-        removeTodosError: "",
+        errorMessage: "",
       };
     case "REMOVE_TODOS_SUCCESS":
       return {
         ...state,
         todoList: state.todoList.filter((item) => item.completed === false),
         removeTodosIsLoading: false,
-        removeTodosError: "",
+        errorMessage: "",
       };
     case "REMOVE_TODOS_FAIL":
       return {
         ...state,
         removeTodosIsLoading: false,
-        removeTodosError: action.payload,
+        errorMessage: action.payload,
       };
     case "REMOVE_TODO_START":
       return {
         ...state,
         removeTodoIsLoading: true,
-        removeTodoError: "",
+        errorMessage: "",
       };
     case "REMOVE_TODO_SUCCESS":
       return {
@@ -110,34 +109,39 @@ const reducer = (state = initialState, action) => {
           (item) => item._id !== action.payload._id
         ),
         removeTodoIsLoading: false,
-        removeTodoError: "",
+        errorMessage: "",
       };
     case "REMOVE_TODO_FAIL":
       return {
         ...state,
         removeTodoIsLoading: false,
-        removeTodoError: action.payload,
+        errorMessage: action.payload,
       };
     case "UPDATE_TODO_START":
       return {
         ...state,
-        updateTodoIsLoading: true,
-        updateTodoError: "",
+        todoList: state.todoList.map((item) =>
+          item._id === action.payload ? { ...item, isLoading: true } : item
+        ),
+        errorMessage: "",
       };
     case "UPDATE_TODO_SUCCESS":
       return {
         ...state,
         todoList: state.todoList.map((item) =>
-          item._id === action.payload._id ? action.payload : item
+          item._id === action.payload._id
+            ? { ...action.payload, isLoading: false }
+            : item
         ),
-        updateTodoIsLoading: false,
-        updateTodoError: "",
+        errorMessage: "",
       };
     case "UPDATE_TODO_FAIL":
       return {
         ...state,
-        updateTodoIsLoading: false,
-        updateTodoError: action.payload,
+        todoList: state.todoList.map((item) => {
+          return { ...item, isLoading: false };
+        }),
+        errorMessage: action.payload,
       };
     default:
       return state;

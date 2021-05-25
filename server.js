@@ -3,11 +3,11 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const path = require("path");
+const auth = require("./middleware/auth");
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 const todoRoutes = require("./routes/todos");
-const deleteCompletedRoutes = require("./routes/deleteCompleted");
 const userRoutes = require("./routes/user");
 const authRoutes = require("./routes/auth");
 
@@ -17,8 +17,7 @@ require("dotenv").config();
 app.use(cors());
 // app.use(bodyParser.json());
 app.use(express.json());
-app.use("/api/todos", todoRoutes);
-app.use("/api/deleteCompleted", deleteCompletedRoutes);
+app.use("/api/todos", auth, todoRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/auth", authRoutes);
 

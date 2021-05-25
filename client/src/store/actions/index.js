@@ -8,9 +8,9 @@ export const fetchTodoListStart = () => {
   };
 };
 
-export const fetchTodoList = () => (dispatch) => {
+export const fetchTodoList = (params) => (dispatch, getState) => {
   dispatch(fetchTodoListStart());
-  Axios.get("/todos")
+  Axios.get(`/todos/${params.id}`, tokenConfig(getState))
     .then((response) => {
       dispatch({ type: "FETCH_TODO_SUCCESS", payload: response.data });
     })
@@ -20,15 +20,25 @@ export const fetchTodoList = () => (dispatch) => {
 };
 
 // TOGGLE COMPLETED A TODO
-export const toggleCompletedStart = () => {
+export const toggleCompletedStart = (id) => {
   return {
     type: "TOGGLE_COMPLETED_START",
+    payload: id,
   };
 };
 
-export const toggleCompleted = (id, completed) => (dispatch) => {
-  dispatch(toggleCompletedStart());
-  Axios.put(`/todos/${id}`, { completed: !completed })
+export const toggleCompleted = (id, completed, params) => (
+  dispatch,
+  getState
+) => {
+  dispatch(toggleCompletedStart(id));
+  Axios.put(
+    `/todos/${params.id}/${id}`,
+    {
+      completed: !completed,
+    },
+    tokenConfig(getState)
+  )
     .then((response) => {
       dispatch({ type: "TOGGLE_COMPLETED_SUCCESS", payload: response.data });
     })
@@ -45,7 +55,11 @@ export const postTodoStart = () => {
 
 export const postTodo = (text) => (dispatch, getState) => {
   dispatch(postTodoStart());
-  Axios.post("/todos", { name: text }, tokenConfig(getState))
+  Axios.post(
+    "/todos",
+    { name: text, creator: getState().auth.userId },
+    tokenConfig(getState)
+  )
     .then((response) => {
       dispatch({ type: "POST_TODO_SUCCESS", payload: response.data });
     })
@@ -60,9 +74,15 @@ export const removeTodosStart = () => {
   };
 };
 
-export const removeTodos = () => (dispatch) => {
+export const removeTodos = () => (dispatch, getState) => {
   dispatch(removeTodosStart());
-  Axios.delete("/deleteCompleted", { completed: true })
+  Axios.delete(
+    `/todos/:userId/:todoId/deleteCompleted`,
+    tokenConfig(getState),
+    {
+      completed: true,
+    }
+  )
     .then((response) => {
       dispatch({ type: "REMOVE_TODOS_SUCCESS", payload: response.data });
     })
@@ -77,9 +97,9 @@ export const removeTodoStart = () => {
   };
 };
 
-export const removeTodo = (id) => (dispatch) => {
+export const removeTodo = (id, params) => (dispatch, getState) => {
   dispatch(removeTodoStart());
-  Axios.delete(`/todos/${id}`)
+  Axios.delete(`/todos/${params.id}/${id}`, tokenConfig(getState))
     .then((response) => {
       dispatch({ type: "REMOVE_TODO_SUCCESS", payload: response.data });
     })
@@ -88,15 +108,17 @@ export const removeTodo = (id) => (dispatch) => {
     });
 };
 // UPDATE A TODO WITH SELECTED ID FROM SERVER
-export const updateTodoStart = () => {
+export const updateTodoStart = (id) => {
+  console.log(id);
   return {
     type: "UPDATE_TODO_START",
+    payload: id,
   };
 };
 
-export const updateTodo = (id, text) => (dispatch) => {
-  dispatch(updateTodoStart());
-  Axios.put(`/todos/${id}`, { name: text })
+export const updateTodo = (id, text, params) => (dispatch, getState) => {
+  dispatch(updateTodoStart(id));
+  Axios.put(`/todos/${params.id}/${id}`, { name: text }, tokenConfig(getState))
     .then((response) => {
       dispatch({ type: "UPDATE_TODO_SUCCESS", payload: response.data });
     })

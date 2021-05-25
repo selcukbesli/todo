@@ -3,30 +3,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { register, login, loginGoogle } from "../../store/actions/auth";
 import { GoogleLogin } from "react-google-login";
 import { useHistory } from "react-router-dom";
+import { Formik, Form, Field, ErrorMessage } from "formik";
 import "./Auth.css";
 
 const Auth = () => {
-  const [state, setState] = useState({ name: "", email: "", password: "" });
   const [isSignUp, setIsSignUp] = useState(false);
 
   const { id, msg } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
   const history = useHistory();
-
-  const onChangeHandler = (event) => {
-    setState({ ...state, [event.target.name]: event.target.value });
-  };
-
-  const onSubmitHandler = (event) => {
-    event.preventDefault();
-    isSignUp
-      ? dispatch(register(state, history))
-      : dispatch(
-          login({ email: state.email, password: state.password, history })
-        );
-    setState({ name: "", email: "", password: "" });
-  };
 
   // GOOGLE LOGIN
   const googleLoginSuccess = (res) => {
@@ -41,69 +27,114 @@ const Auth = () => {
   return (
     <>
       <div className="container-fluid box ">
-        <form onSubmit={onSubmitHandler}>
-          <div className="row mx-0">
-            <div className="col-md-6 px-0">
-              <button
-                className={!isSignUp ? "active" : ""}
-                onClick={(event) => {
-                  event.preventDefault();
-                  setIsSignUp(false);
-                }}
-              >
-                Sign In
-              </button>
-            </div>
-            <div className="col-md-6 px-0">
-              <button
-                className={isSignUp ? "active" : ""}
-                onClick={(event) => {
-                  event.preventDefault();
-                  setIsSignUp(true);
-                }}
-              >
-                Sign Up
-              </button>
-            </div>
-          </div>
-          {isSignUp && (
-            <input
-              type="name"
-              value={state.name}
-              name="name"
-              placeholder="Name"
-              onChange={onChangeHandler}
-            />
-          )}
-          <input
-            type="email"
-            value={state.email}
-            name="email"
-            placeholder="Email"
-            onChange={onChangeHandler}
-          />
-          <input
-            type="password"
-            value={state.password}
-            name="password"
-            placeholder="Password"
-            onChange={onChangeHandler}
-          />
-          <input type="submit" name="submit" />
-          {!isSignUp && (
-            <div>
-              <h6>or Sign In with</h6>
-              <GoogleLogin
-                clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
-                buttonText=""
-                onSuccess={googleLoginSuccess}
-                onFailure={googleLoginFailure}
-                cookiePolicy={"single_host_origin"}
-                className="google"
+        <Formik
+          initialValues={{ name: "", email: "", password: "" }}
+          validate={(values) => {
+            const errors = {};
+            if (!values.email) {
+              errors.email = "Required";
+            } else if (
+              !/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
+                values.email
+              )
+            ) {
+              errors.email = "Invalid email address";
+            }
+            if (!values.password) {
+              errors.password = "Required";
+            } else if (values.password.length < 8) {
+              errors.password = "Password is too short";
+            }
+            return errors;
+          }}
+          onSubmit={(values, { setSubmitting }) => {
+            isSignUp
+              ? dispatch(register(values, history))
+              : dispatch(
+                  login({
+                    email: values.email,
+                    password: values.password,
+                    history,
+                  })
+                );
+            setSubmitting(false);
+          }}
+        >
+          {({ errors }) => (
+            <Form>
+              <div className="row mx-0">
+                <div className="col px-0">
+                  <button
+                    className={!isSignUp ? "active" : ""}
+                    onClick={(event) => {
+                      event.preventDefault();
+                      setIsSignUp(false);
+                    }}
+                  >
+                    Sign In
+                  </button>
+                </div>
+                <div className="col px-0">
+                  <button
+                    className={isSignUp ? "active" : ""}
+                    onClick={(event) => {
+                      event.preventDefault();
+                      setIsSignUp(true);
+                    }}
+                  >
+                    Sign Up
+                  </button>
+                </div>
+              </div>
+              {isSignUp && (
+                <div>
+                  <Field type="name" name="name" placeholder="Name" />
+                  <ErrorMessage
+                    name="email"
+                    component="div"
+                    className="ErrorMessage"
+                  />
+                </div>
+              )}
+              <Field type="email" name="email" placeholder="Email" />
+              <ErrorMessage
+                name="email"
+                component="div"
+                className="ErrorMessage"
               />
-            </div>
+              <Field type="password" name="password" placeholder="Password" />
+              <ErrorMessage
+                name="password"
+                component="div"
+                className="ErrorMessage"
+              />
+              <button
+                type="submit"
+                name="submit"
+                disabled={
+                  isSignUp
+                    ? errors?.email || errors?.password || errors?.name
+                    : errors?.email || errors?.password
+                }
+              >
+                {!isSignUp ? "Sign In" : "Sign Up"}
+              </button>
+              {!isSignUp && (
+                <div>
+                  <h6>or Sign In with</h6>
+                  <GoogleLogin
+                    clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
+                    buttonText=""
+                    onSuccess={googleLoginSuccess}
+                    onFailure={googleLoginFailure}
+                    cookiePolicy={"single_host_origin"}
+                    className="google"
+                  />
+                </div>
+              )}
+            </Form>
           )}
-        </form>
+        </Formik>
       </div>
       {id && (
         <div className="container">

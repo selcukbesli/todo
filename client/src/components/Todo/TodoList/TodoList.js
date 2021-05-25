@@ -1,78 +1,76 @@
-import React from "react";
+import React, { useState } from "react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  fetchTodoList,
-  removeTodo,
-  toggleCompleted,
-} from "../../../store/actions";
+import { fetchTodoList, removeTodos } from "../../../store/actions";
 import ListGroup from "react-bootstrap/ListGroup";
-import Spinner from "react-bootstrap/Spinner";
 import CustomSpinner from "../../UI/CustomSpinner/CustomSpinner";
 import InputArea from "../InputArea/InputArea";
-import UpdateTodoModal from "../UpdateTodoModal/UpdateTodoModal";
-import { DeleteIcon } from "../../UI/Icons";
+import { useParams } from "react-router";
+import TodoListItem from "./TodoListItem";
+import { DeleteIcon, ExpandIcon, CollapseIcon } from "../../UI/Icons";
 
 const TodoList = () => {
   const todoList = useSelector((state) => state.todo.todoList);
   const fetchTodoIsLoading = useSelector(
     (state) => state.todo.fetchTodoIsLoading
   );
-  const toggleCompletedIsLoading = useSelector(
-    (state) => state.todo.toggleCompletedIsLoading
-  );
-
   const dispatch = useDispatch();
+  const params = useParams();
+  const errorMessage = useSelector((state) => state.todo.errorMessage);
 
   useEffect(() => {
-    dispatch(fetchTodoList());
-  }, [dispatch]);
+    dispatch(fetchTodoList(params));
+  }, [dispatch, params]);
 
-  const listItemStyle = {
-    textDecoration: "line-through",
-  };
-
+  const [showCompleted, setShowCompleted] = useState(false);
   return (
-    <div className="w-75 mx-auto">
+    <div className="container-sm mx-auto " style={{ maxWidth: "750px" }}>
       <InputArea />
+      {errorMessage && (
+        <div className="container ">
+          <div className="alert alert-danger" role="alert">
+            {errorMessage}
+          </div>
+        </div>
+      )}
       {fetchTodoIsLoading ? (
         <CustomSpinner />
       ) : (
         <ListGroup as="ul">
-          {todoList.map((item) => (
-            <ListGroup.Item
-              style={item.completed ? listItemStyle : null}
-              as="li"
-              key={item._id}
-            >
-              <div className="container">
-                <div className="row">
-                  <div
-                    className="col-sm"
-                    onClick={() =>
-                      dispatch(toggleCompleted(item._id, item.completed))
-                    }
-                  >
-                    {item.name}
-                    {toggleCompletedIsLoading ? (
-                      <Spinner animation="border" variant="dark" size="sm" />
-                    ) : (
-                      ""
-                    )}
-                  </div>
-                  <div className="col-2">
-                    <UpdateTodoModal item={item} />
-                    <button
-                      onClick={() => dispatch(removeTodo(item._id))}
-                      style={{ background: "none", border: "none" }}
-                    >
-                      <DeleteIcon />
-                    </button>
-                  </div>
-                </div>
+          {todoList
+            .filter((filteredItem) => filteredItem.completed === false)
+            .map((item) => (
+              <TodoListItem item={item} key={item._id} />
+            ))}
+          <div className="container px-3 py-2 mx-0 bg-light">
+            <div className="row mx-0">
+              <div
+                className="col"
+                onClick={() => setShowCompleted(!showCompleted)}
+              >
+                {showCompleted ? <CollapseIcon /> : <ExpandIcon />}
+                Completed :
+                {
+                  todoList.filter(
+                    (filteredItem) => filteredItem.completed === true
+                  ).length
+                }
               </div>
-            </ListGroup.Item>
-          ))}
+              <div className="col-2 px-0 d-flex justify-content-center">
+                <button
+                  // onClick={() => ()}
+                  onClick={() => dispatch(removeTodos())}
+                  style={{ background: "none", border: "none" }}
+                >
+                  <DeleteIcon size={25} />
+                </button>
+              </div>
+            </div>
+          </div>
+          {showCompleted &&
+            todoList
+              .filter((filteredItem) => filteredItem.completed === true)
+              .map((item) => <TodoListItem item={item} key={item._id} />)}
         </ListGroup>
       )}
     </div>

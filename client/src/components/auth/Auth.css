@@ -47,7 +47,8 @@
   color: #2ecc71;
 }
 
-.box input[type="submit"] {
+.box button[type="submit"] {
+  width: 35%;
   border: 2px solid white;
   display: block;
   text-align: center;
@@ -61,8 +62,13 @@
   background-color: #45aaf2;
 }
 
-.box input[type="submit"]:hover {
+.box button[type="submit"]:hover {
   background: #3867d6;
+}
+
+.box button[type="submit"]:disabled {
+  background: #95a5a6;
+  cursor: not-allowed;
 }
 
 .box button {
@@ -100,4 +106,8 @@
 
 .box button span {
   display: none;
+}
+
+.ErrorMessage {
+  color: #ff3838;
 }

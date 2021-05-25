@@ -10,9 +10,17 @@ const TodoSchema = new Schema({
     type: Boolean,
     default: false,
   },
+  isLoading: {
+    type: Boolean,
+    default: false,
+  },
   created: {
     type: Date,
     default: Date.now,
+  },
+  creator: {
+    type: String,
+    require: true,
   },
 });
 

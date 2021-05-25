@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { useDispatch } from "react-redux";
+import { useParams } from "react-router";
 import { updateTodo } from "../../../store/actions";
 import { UpdateIcon } from "../../UI/Icons";
 
 const UpdateTodoModal = ({ item }) => {
+  const params = useParams();
   const [show, setShow] = useState(false);
   const [text, setText] = useState(item.name);
 
@@ -42,7 +44,7 @@ const UpdateTodoModal = ({ item }) => {
             variant="primary"
             onClick={() => {
               handleClose();
-              dispatch(updateTodo(item._id, text));
+              dispatch(updateTodo(item._id, text, params));
             }}
           >
             Update Todo
