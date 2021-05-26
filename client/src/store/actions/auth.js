@@ -81,52 +81,56 @@ export const loadUser = () => (dispatch, getState) => {
 };
 
 // REGISTER
-export const register = ({ name, email, password }, history) => (dispatch) => {
-  // Headers
-  const config = {
-    headers: {
-      "Content-type": "application/json",
-    },
-  };
-  // Request body
-  const body = JSON.stringify({ name, email, password });
+export const register =
+  ({ name, email, password }, history) =>
+  (dispatch) => {
+    // Headers
+    const config = {
+      headers: {
+        "Content-type": "application/json",
+      },
+    };
+    // Request body
+    const body = JSON.stringify({ name, email, password });
 
-  Axios.post("/user", body, config)
-    .then((res) => {
-      dispatch({ type: "REGISTER_SUCCESS", payload: res.data });
-      history.push(`/todos/${res.data.user.id}`);
-    })
-    .catch((err) => {
-      dispatch(
-        returnErrors(err.response.data, err.response.status, "REGISTER_FAIL")
-      );
-      dispatch({ type: "REGISTER_FAIL" });
-    });
-};
+    Axios.post("/user", body, config)
+      .then((res) => {
+        dispatch({ type: "REGISTER_SUCCESS", payload: res.data });
+        history.push(`/todos/${res.data.user.id}`);
+      })
+      .catch((err) => {
+        dispatch(
+          returnErrors(err.response.data, err.response.status, "REGISTER_FAIL")
+        );
+        dispatch({ type: "REGISTER_FAIL" });
+      });
+  };
 
 // Login User
-export const login = ({ email, password, history }) => (dispatch) => {
-  // Headers
-  const config = {
-    headers: {
-      "Content-type": "application/json",
-    },
-  };
-  // Request body
-  const body = JSON.stringify({ email, password });
+export const login =
+  ({ email, password, history }) =>
+  (dispatch) => {
+    // Headers
+    const config = {
+      headers: {
+        "Content-type": "application/json",
+      },
+    };
+    // Request body
+    const body = JSON.stringify({ email, password });
 
-  Axios.post("/auth", body, config)
-    .then((res) => {
-      dispatch({ type: "LOGIN_SUCCESS", payload: res.data });
-      history.push(`/todos/${res.data.user.id}`);
-    })
-    .catch((err) => {
-      dispatch(
-        returnErrors(err.response.data, err.response.status, "LOGIN_FAIL")
-      );
-      dispatch({ type: "LOGIN_FAIL" });
-    });
-};
+    Axios.post("/auth", body, config)
+      .then((res) => {
+        dispatch({ type: "LOGIN_SUCCESS", payload: res.data });
+        history.push(`/todos/${res.data.user.id}`);
+      })
+      .catch((err) => {
+        dispatch(
+          returnErrors(err.response.data, err.response.status, "LOGIN_FAIL")
+        );
+        dispatch({ type: "LOGIN_FAIL" });
+      });
+  };
 
 // LOGOUT
 export const logout = () => {

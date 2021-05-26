@@ -21,7 +21,7 @@ const InputArea = () => {
 
   return (
     <div className="container px-0">
-      <form className="form-control-lg d-flex ps-0">
+      <form className="form-control-lg row d-flex ">
         <input
           className="col"
           placeholder="Enter to do "

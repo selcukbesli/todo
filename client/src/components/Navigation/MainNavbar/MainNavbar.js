@@ -10,20 +10,25 @@ const MainNavbar = () => {
   const { isAuthenticated, user } = useSelector((state) => state.auth);
   return (
     <>
-      <Navbar className="navbar navbar-expand navbar-dark bg-dark">
-        <Navbar.Brand as={NavLink} to="/todos" className="ms-2">
+      <Navbar bg="dark" className="justify-content-between px-4">
+        <Navbar.Brand as={NavLink} to="/todos" className="text-light">
           Todo List
         </Navbar.Brand>
         {isAuthenticated ? (
-          <Nav className="container d-flex justify-content-end ">
-            <Navbar.Text>Welcome {user?.name}</Navbar.Text>
-            <Nav.Link>
+          <Nav className=" ">
+            <Navbar.Text
+              className=" d-inline-block text-light text-nowrap text-truncate"
+              style={{ maxWidth: "160px" }}
+            >
+              Welcome {user?.name}
+            </Navbar.Text>
+            <Nav.Link className="text-light ">
               <Logout />
             </Nav.Link>
           </Nav>
         ) : (
-          <Nav className="container  justify-content-end">
-            <Nav.Link as={NavLink} to="/" className="p-0 mb-0">
+          <Nav>
+            <Nav.Link as={NavLink} to="/" className="text-light ">
               Sign In
             </Nav.Link>
           </Nav>
