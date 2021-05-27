@@ -5,6 +5,7 @@ import Logout from "../../auth/Logout";
 import { useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 // import Login from "../../Login";
+import "./MainNavbar.css";
 
 const MainNavbar = () => {
   const { isAuthenticated, user } = useSelector((state) => state.auth);
@@ -15,12 +16,12 @@ const MainNavbar = () => {
           Todo List
         </Navbar.Brand>
         {isAuthenticated ? (
-          <Nav className=" ">
+          <Nav>
             <Navbar.Text
               className=" d-inline-block text-light text-nowrap text-truncate"
               style={{ maxWidth: "160px" }}
             >
-              Welcome {user?.name}
+              <span className="greeting">Welcome {user?.name}</span>
             </Navbar.Text>
             <Nav.Link className="text-light ">
               <Logout />

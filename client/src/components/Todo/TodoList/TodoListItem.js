@@ -8,6 +8,7 @@ import { useParams } from "react-router";
 
 import { removeTodo, toggleCompleted } from "../../../store/actions";
 import { useDispatch } from "react-redux";
+import "./TodoListItem.css";
 
 const TodoListItem = ({ item }) => {
   const dispatch = useDispatch();
@@ -31,10 +32,11 @@ const TodoListItem = ({ item }) => {
                 ""
               )}
             </div>
-            <div className="col-2 d-flex px-0 justify-content-between">
-              <UpdateTodoModal item={item} />
+            <div className="col-2 d-flex px-0 justify-content-around">
+              <UpdateTodoModal item={item} className="p-0" />
               <button
                 onClick={() => dispatch(removeTodo(item._id, params))}
+                className="d-button"
                 style={{ background: "none", border: "none" }}
               >
                 <DeleteIcon size={20} />

@@ -104,6 +104,7 @@ export const register =
         );
         dispatch({ type: "REGISTER_FAIL" });
       });
+    setTimeout(() => dispatch(logout()), 30 * 60 * 1000);
   };
 
 // Login User
@@ -130,6 +131,7 @@ export const login =
         );
         dispatch({ type: "LOGIN_FAIL" });
       });
+    setTimeout(() => dispatch(logout()), 30 * 60 * 1000);
   };
 
 // LOGOUT

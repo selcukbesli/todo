@@ -27,25 +27,23 @@ export const toggleCompletedStart = (id) => {
   };
 };
 
-export const toggleCompleted = (id, completed, params) => (
-  dispatch,
-  getState
-) => {
-  dispatch(toggleCompletedStart(id));
-  Axios.put(
-    `/todos/${params.id}/${id}`,
-    {
-      completed: !completed,
-    },
-    tokenConfig(getState)
-  )
-    .then((response) => {
-      dispatch({ type: "TOGGLE_COMPLETED_SUCCESS", payload: response.data });
-    })
-    .catch((error) => {
-      dispatch({ type: "TOGGLE_COMPLETED_FAIL", payload: error.message });
-    });
-};
+export const toggleCompleted =
+  (id, completed, params) => (dispatch, getState) => {
+    dispatch(toggleCompletedStart(id));
+    Axios.put(
+      `/todos/${params.id}/${id}`,
+      {
+        completed: !completed,
+      },
+      tokenConfig(getState)
+    )
+      .then((response) => {
+        dispatch({ type: "TOGGLE_COMPLETED_SUCCESS", payload: response.data });
+      })
+      .catch((error) => {
+        dispatch({ type: "TOGGLE_COMPLETED_FAIL", payload: error.message });
+      });
+  };
 // POST DATA TO SERVER
 export const postTodoStart = () => {
   return {
@@ -57,7 +55,10 @@ export const postTodo = (text) => (dispatch, getState) => {
   dispatch(postTodoStart());
   Axios.post(
     "/todos",
-    { name: text, creator: getState().auth.userId },
+    {
+      name: text,
+      creator: getState().auth.user.id || getState().auth.user._id,
+    },
     tokenConfig(getState)
   )
     .then((response) => {

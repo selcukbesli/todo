@@ -15,18 +15,22 @@ const App = () => {
     dispatch(loadUser());
   }, [dispatch]);
 
-  let routes = (
-    <Switch>
-      <Route path="/" exact component={Auth} />
-      <Redirect to="/" />
-    </Switch>
-  );
+  let routes;
 
   if (isAuthenticated) {
     routes = (
       <Switch>
         <Route path="/todos/:id" component={TodoList} />
         <Redirect to={`/todos/${localStorage.getItem("userId")}`} />
+      </Switch>
+    );
+  }
+
+  if (isAuthenticated === false) {
+    routes = (
+      <Switch>
+        <Route path="/" exact component={Auth} />
+        <Redirect to="/" />
       </Switch>
     );
   }

@@ -5,6 +5,9 @@ const auth = require("../middleware/auth");
 
 // CREATE A TODO
 router.post("/", (req, res) => {
+  if (req.body.creator === undefined) {
+    return;
+  }
   const todo = new Todo({
     name: req.body.name,
     creator: req.body.creator,

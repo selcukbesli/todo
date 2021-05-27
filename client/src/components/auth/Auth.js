@@ -43,7 +43,12 @@ const Auth = () => {
             if (!values.password) {
               errors.password = "Required";
             } else if (values.password.length < 8) {
-              errors.password = "Password is too short";
+              errors.password = "at least 8 char.";
+            }
+            if (isSignUp & !values.name) {
+              errors.name = "Required";
+            } else if (isSignUp & (values.name.length < 3)) {
+              errors.name = "at least 3 char";
             }
             return errors;
           }}
@@ -90,7 +95,7 @@ const Auth = () => {
                 <div>
                   <Field type="name" name="name" placeholder="Name" />
                   <ErrorMessage
-                    name="email"
+                    name="name"
                     component="div"
                     className="ErrorMessage"
                   />
